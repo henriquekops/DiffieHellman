@@ -19,7 +19,7 @@ class TestDiffieHellman(unittest.TestCase):
 
 	def test_encrypt(self):
 		d = DiffieHellman(a)
-		assert(d.encrypt(p, g), A)
+		assert d.run(p, g), A
 
 	def test_decrypt(self):
 		pass
