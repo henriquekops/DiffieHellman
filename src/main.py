@@ -11,13 +11,22 @@ from math import pow
 
 # project dependencies
 from main.diffie import DiffieHellman
+from src.main.aes import AES
 
 __author__ = "Henrique Kops && Victoria Tortelli"
 
 
-HELP = "python3 main.py <g:int> <p:int>"
-ENCRYPT = "encrypt"
-DECRYPT = "decrypt"
+HELP = "python3 main.py <g:int> <p:int> <mode:str[exch,send,recv]> <msg:str{mode=[send,recv]}>"
+
+
+def save(msg:str, path:str):
+	pass
+
+def recover(path:str):
+	pass
+
+A_PATH = ""
+KEY_PATH = ""
 
 
 if __name__ == "__main__":
@@ -28,12 +37,27 @@ if __name__ == "__main__":
 
 	p = argv[1]
 	g = argv[2]
-	
-	a = randint(pow(10,29), pow(10,30))
-	
-	d = DiffieHellman(a)
+	mode = argv[3]
 
-	print(d.run(p, g))
+	if mode == "exch":
+		a = randint(pow(10,29), pow(10,30))
+		save(a, A_PATH)
+		diffie = DiffieHellman(a)
+		gab = diffie.run(p, g)
+		key = "TODO" # TODO: SHA256(gab)[:128]
+		save(key, KEY_PATH)
+	elif mode == "recv":
+		msg = argv[4]
+		key = recover(KEY_PATH)
+		aes = AES(key, msg[:128])
+		dt = aes.decrypt(msg[129:])
+		print(dt)
+	elif mode == "send":
+		msg = argv[4]
+		key = recover(KEY_PATH)
+		aes = AES(key, msg[:128])
+		dt = aes.encrypt(msg[129:])
+		print(dt)
 
 
 # p = '''B10B8F96A080E01DDE92DE5EAE5D54EC52C99FBCFB06A3C6\
