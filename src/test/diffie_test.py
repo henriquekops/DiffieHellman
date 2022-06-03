@@ -11,7 +11,9 @@ from src.test.utils import (
 	a,
 	p, 
 	g, 	
-	A
+	A,
+	B,
+	V
 )
 
 
@@ -19,10 +21,11 @@ class TestDiffieHellman(unittest.TestCase):
 
 	def test_encrypt(self):
 		d = DiffieHellman(a)
-		assert d.run(p, g), A
+		assert d.run(g, p), A
 
 	def test_decrypt(self):
-		pass
+		d = DiffieHellman(a)
+		assert d.run(B, p), V
 
 
 if __name__ == "__main__":

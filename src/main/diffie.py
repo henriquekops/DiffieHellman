@@ -9,5 +9,5 @@ class DiffieHellman:
 	def __init__(self, a:int) -> None:
 		self.a = a
 
-	def run(self, gen, mod) -> None:
-		return pow(gen, self.a, mod)
+	def run(self, g, p) -> None:
+		return pow(g, self.a, p)
