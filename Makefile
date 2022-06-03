@@ -1,5 +1,18 @@
+install:
+	python3 -m venv venv
+	( \
+		. venv/bin/activate && \
+		pip3 install -r requirements.txt \
+	)
+
 run:
-	python src/main.py
+	( \
+		. venv/bin/activate && \
+		python3 src/main.py \
+	)
 
 test:
-	python -m unittest src/test/diffie_test.py
+	( \
+		. venv/bin/activate && \
+		python3 -m unittest src/test/diffie_test.py \
+	)

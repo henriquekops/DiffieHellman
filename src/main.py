@@ -12,10 +12,10 @@ from math import pow
 # project dependencies
 from main.diffie import DiffieHellman
 
-__author__ = "Henrique Kops"
+__author__ = "Henrique Kops && Victoria Tortelli"
 
 
-HELP = "python3 main.py <g:int> <p:int> <mode:str>"
+HELP = "python3 main.py <g:int> <p:int>"
 ENCRYPT = "encrypt"
 DECRYPT = "decrypt"
 
