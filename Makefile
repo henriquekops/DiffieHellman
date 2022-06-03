@@ -14,5 +14,6 @@ run:
 test:
 	( \
 		. venv/bin/activate && \
-		python3 -m unittest src/test/diffie_test.py \
+		python3 -m unittest src/test/diffie_test.py && \
+		python3 -m unittest src/test/aes_test.py \
 	)

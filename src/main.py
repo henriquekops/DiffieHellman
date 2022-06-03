@@ -7,11 +7,13 @@ from sys import (
 	exit
 )
 from random import randint
-from math import pow
 
 # project dependencies
 from main.diffie import DiffieHellman
 from src.main.aes import AES
+
+# external dependencies
+from cryptography.hazmat.primitives.hashes import SHA256
 
 __author__ = "Henrique Kops && Victoria Tortelli"
 
@@ -40,11 +42,11 @@ if __name__ == "__main__":
 	mode = argv[3]
 
 	if mode == "exch":
-		a = randint(pow(10,29), pow(10,30))
+		a = randint(10**29, 10**30)
 		save(a, A_PATH)
 		diffie = DiffieHellman(a)
-		gab = diffie.run(p, g)
-		key = "TODO" # TODO: SHA256(gab)[:128]
+		v = diffie.run(p, g)
+		key = SHA256(v[:128])
 		save(key, KEY_PATH)
 	elif mode == "recv":
 		msg = argv[4]

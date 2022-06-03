@@ -32,6 +32,6 @@ class AES:
 	def decrypt(self, msg:str) -> str:
 		decryptor = self.cipher.decryptor()
 		unpadder = self.padding.unpadder()
-		p_msg = decryptor.update(msg) + decryptor.finalize()
+		p_msg = decryptor.update(bytes.fromhex(msg)) + decryptor.finalize()
 		return unpadder.update(p_msg) + unpadder.finalize()
 
