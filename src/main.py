@@ -10,7 +10,7 @@ from random import randint
 
 # project dependencies
 from main.diffie import DiffieHellman
-from src.main.aes import AES
+from main.aes import AES
 
 # external dependencies
 from cryptography.hazmat.primitives.hashes import SHA256
@@ -33,7 +33,7 @@ KEY_PATH = ""
 
 if __name__ == "__main__":
 
-	if len(argv) !=3:
+	if len(argv) < 3 or len(argv) > 4:
 		print(HELP)
 		exit(0)
 

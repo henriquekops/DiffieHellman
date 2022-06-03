@@ -1,3 +1,5 @@
+.SILENT:
+
 install:
 	python3 -m venv venv
 	( \
@@ -14,6 +16,5 @@ run:
 test:
 	( \
 		. venv/bin/activate && \
-		python3 -m unittest src/test/diffie_test.py && \
-		python3 -m unittest src/test/aes_test.py \
+		python3 -m unittest discover -s src/test -p '*_test.py' \
 	)
