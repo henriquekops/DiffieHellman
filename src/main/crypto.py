@@ -1,6 +1,9 @@
 #!/usr/bin/env python3
 #-*- coding: utf-8 -*-
 
+# built-in dependencies
+from hashlib import sha256
+
 # external dependencies
 from cryptography.hazmat.backends import default_backend
 from cryptography.hazmat.primitives.padding import PKCS7
@@ -35,3 +38,12 @@ class AES:
 		p_msg = decryptor.update(bytes.fromhex(msg)) + decryptor.finalize()
 		return unpadder.update(p_msg) + unpadder.finalize()
 
+
+class SHA256:
+
+	@classmethod
+	def hash(self, v:int) -> int:
+			return sha256()\
+				.update(str(v)[:32].encode("utf-8"))\
+				.digest()\
+				.hex()

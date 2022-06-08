@@ -2,72 +2,72 @@
 #-*- coding: utf-8 -*-
 
 # built-in dependencies
-from sys import (
-	argv,
-	exit
-)
-from random import randint
-from typing import Tuple
+import argparse
 
 # project dependencies
-from main.diffie import DiffieHellman
-from main.aes import AES
 from main.state import Storage
+from main.diffie import DiffieHellman
+from main.crypto import (
+	AES,
+	SHA256
+)
+from main.utils import (
+	MODES,
+	load,
+	check
+)
 
-# external dependencies
-import yaml
-from hashlib import sha256
 
 __author__ = "Henrique Kops && Victoria Tortelli"
 
 
-HELP = "python3 main.py <mode:str[exch,send,recv]> <args_path:str|msg:str>"
+parser = argparse.ArgumentParser(description="DiffieHellman")
+parser.add_argument("mode", help="usage mode")
+subparsers = parser.add_subparsers(dest="mode", required=True)
 
+parser_exch = subparsers.add_parser("exch", help="exchange usage mode")
+group_exch = parser_exch.add_mutually_exclusive_group(required=True)
+group_exch.add_argument("--key", metavar="B", type=int, help="generates key using B value")
+group_exch.add_argument("--A", action="store_true", help="generates A value")
+parser_exch.add_argument("--argfile", help="argument file containing public 'p' and 'g'", required=True)
 
-def load(args_path:str) -> Tuple[int, int]:
-	f = open(args_path, "r")
-	data = yaml.safe_load(f)
-	f.close()
-	p = int(data.get("p"), 16)
-	g = int(data.get("g"), 16)
-	return p, g
+parser_talk = subparsers.add_parser("talk", help="talk usage mode")
+group_talk = parser_talk.add_mutually_exclusive_group(required=True)
+group_talk.add_argument("--send", metavar="MSG", type=str, help="send message")
+group_talk.add_argument("--recv", metavar="MSG", type=int, help="receive message")
+
 
 if __name__ == "__main__":
-
-	if len(argv) != 3:
-		print(HELP)
-		exit(0)
-
-	mode = argv[1]
-	args = argv[2]
+	args = parser.parse_args()
 
 	storage = Storage()
 
-	a, key = storage.get()
+	if args.mode.__eq__(MODES.exch):
+		p, g = load(args.argfile)
+		
+		if args.A:
+			diffie = DiffieHellman()
+			storage.set_a(diffie.a)
+			A:int = diffie.run(g=g, p=p)
+			print(A)
 
-	print(f"a = {a}")
-	print(f"key = {key}")
+		else:
+			a = storage.get_a()
+			check(a, "a")
+			diffie = DiffieHellman(a)
+			V:int = diffie.run(g=args.key, p=p)
+			key:int = SHA256.hash(V)
+			storage.set_key(a, key)
+			print(key)
 
-	if mode == "exch":
-		if not a: a = randint(10**29, 10**30)
-		else: a = int(a, 16)
-		diffie = DiffieHellman(a)
-		p, g = load(args)
-		v = diffie.run(p, g)
-		h = sha256()
-		h.update(str(v)[:32].encode("utf-8"))
-		key = h.digest().hex()
-		print(p, '\n\n')
-		print(g, '\n\n')
-		print(v, '\n\n')
-		print(key, '\n\n')
-		storage.set(a, key)
 	else:
 		msg = args
-		aes = AES(key, msg[:128])
-		if mode == "recv":
-			dt = aes.decrypt(msg[129:])
-			print(dt)
-		elif mode == "send":
-			ct = aes.encrypt(msg[129:])
-			print(ct)
+		key = storage.get_key()
+		check(key, "key")
+		aes = AES(key, msg[:32])
+
+		if args.mode.__eq__(MODES.recv):
+			print(aes.decrypt(msg[33:]))
+
+		elif args.mode.__eq__(MODES.send):
+			print(aes.encrypt(msg[33:]))

@@ -7,7 +7,7 @@ __author__ = "Henrique Kops && Victoria Tortelli"
 import unittest
 
 # project dependencies
-from src.main.aes import AES
+from src.main.crypto import AES
 
 
 class TestAES(unittest.TestCase):
