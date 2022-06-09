@@ -18,7 +18,7 @@ __author__ = "Henrique Kops && Victoria Tortelli"
 
 class AES:
 
-	def __init__(self, key:bytes, iv:str) -> None:
+	def __init__(self, key:bytes, iv:bytes) -> None:
 		self.padding = PKCS7(block_size=256)
 		self.cipher = Cipher(
 			algorithm=algorithms.AES(key),

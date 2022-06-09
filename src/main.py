@@ -3,6 +3,7 @@
 
 # built-in dependencies
 import argparse
+from random import randbytes
 
 # project dependencies
 from main.state import Storage
@@ -65,16 +66,16 @@ if __name__ == "__main__":
 		check(key, "key")
 
 		if args.recv is not None:
-			iv = args.recv[:16].encode("utf-8")
-			msg = args.recv[16:].encode("utf-8")
+			iv = bytes.fromhex(args.recv[:16])
+			msg = bytes.fromhex(args.recv[16:])
 			aes = AES(key, iv)
 			print(f"decrypted: {aes.decrypt(msg)}")
 
 		elif args.send is not None:
-			iv = args.send[:16].encode("utf-8")
-			msg = args.send[16:].encode("utf-8")
+			iv = randbytes(16)
+			msg = args.send.encode("utf-8")
 			aes = AES(key, iv)
-			print(f"encrypted: {aes.encrypt(msg)}")
+			print(f"encrypted: {aes.encrypt(msg).hex()}")
 
 	else:
 		print("Unknown mode!")

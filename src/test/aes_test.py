@@ -26,7 +26,7 @@ class TestAES(unittest.TestCase):
 
 	def test_decrypt(self):
 		aes = AES(self.KEY, self.IV)
-		assert aes.decrypt(self.CT), self.MSG
+		assert aes.decrypt(bytes.fromhex(self.CT)), self.MSG
 
 
 if __name__ == "__main__":
