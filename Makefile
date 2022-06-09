@@ -18,3 +18,6 @@ test:
 		. venv/bin/activate && \
 		python3 -m unittest discover -s src/test -p '*_test.py' \
 	)
+
+clean:
+	if [ -f diffie.db ]; then rm -f diffie.db; fi

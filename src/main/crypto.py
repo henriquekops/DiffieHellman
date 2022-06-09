@@ -43,7 +43,7 @@ class SHA256:
 
 	@classmethod
 	def hash(self, v:int) -> int:
-			return sha256()\
-				.update(str(v)[:32].encode("utf-8"))\
-				.digest()\
-				.hex()
+		h = sha256()
+		h.update(str(v)[:32].encode("utf-8"))
+		b = h.digest()
+		return b.hex()

@@ -20,15 +20,21 @@ class MODES(enum.Enum):
 
 
 def load(args_path:str) -> Tuple[int, int]:
-	f = open(args_path, "r")
-	data = yaml.safe_load(f)
-	f.close()
-	p = int(data.get("p"), 16)
-	g = int(data.get("g"), 16)
-	return p, g
+	try:
+		f = open(args_path, "r")
+		try:
+			data = yaml.safe_load(f)
+			p = int(data.get("p"), 16)
+			g = int(data.get("g"), 16)
+			return p, g
+		finally:
+			f.close()
+	except FileNotFoundError:
+		print(f"File '{args_path}' not found!")
+		exit(1)
 
 
 def check(arg:str, argname:str) -> None:
 	if not arg:
-		print(f"Could not compute, {argname} is missing!")
+		print(f"Could not compute, '{argname}' is missing!")
 		exit(1)
