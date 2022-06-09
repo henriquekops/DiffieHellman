@@ -1,19 +1,16 @@
 .SILENT:
 
-install:
+check:
+	./check.sh python3
+
+install: check
 	python3 -m venv venv
 	( \
 		. venv/bin/activate && \
 		pip3 install -r requirements.txt \
 	)
 
-run:
-	( \
-		. venv/bin/activate && \
-		python3 src/main.py $(ARGS) \
-	)
-
-test:
+test: check
 	( \
 		. venv/bin/activate && \
 		python3 -m unittest discover -s src/test -p '*_test.py' \
