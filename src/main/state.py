@@ -36,13 +36,13 @@ class Storage:
 		finally:
 			cur.close()
 
-	def get_a(self) -> str:
+	def get_a(self) -> int:
 		res = self.__execute(self.__GET_SQL)
 		return int(res[0][0]) if res else None
 
-	def get_key(self) -> str:
+	def get_key(self) -> bytes:
 		res = self.__execute(self.__GET_SQL)
-		return int(res[0][1]) if res else None
+		return bytes.fromhex(res[0][1]) if res else None
 
 	def set_a(self, a) -> None:
 		self.__execute(self.__SET_SQL, (str(a),))

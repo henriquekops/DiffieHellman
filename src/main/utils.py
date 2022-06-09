@@ -2,9 +2,12 @@
 #-*- coding: utf-8 -*-
 
 # built-in dependencies
-import enum
 from typing import Tuple
 from sys import exit
+from enum import (
+	Enum,
+	auto
+)
 
 
 # external dependencies
@@ -13,10 +16,12 @@ import yaml
 __author__ = "Henrique Kops && Victoria Tortelli"
 
 
-class MODES(enum.Enum):
-	exch:str = "exch"
-	recv:str = "recv"
-	send:str = "send"
+class MODES(Enum):
+	exch = auto()
+	talk = auto()
+
+	def equals(self, string:str) -> bool:
+		return self.name == string
 
 
 def load(args_path:str) -> Tuple[int, int]:

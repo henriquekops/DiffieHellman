@@ -34,7 +34,7 @@ parser_exch.add_argument("--argfile", required=True, type=str, help="argument fi
 parser_talk = subparsers.add_parser("talk", help="talk usage mode")
 group_talk = parser_talk.add_mutually_exclusive_group(required=True)
 group_talk.add_argument("--send", metavar="MSG", type=str, help="send message")
-group_talk.add_argument("--recv", metavar="MSG", type=int, help="receive message")
+group_talk.add_argument("--recv", metavar="MSG", type=str, help="receive message")
 
 
 if __name__ == "__main__":
@@ -42,34 +42,39 @@ if __name__ == "__main__":
 
 	storage = Storage()
 
-	if args.mode.__eq__(MODES.exch):
+	if MODES.exch.equals(args.mode):
 		p, g = load(args.argfile)
 		
 		if args.A:
 			diffie = DiffieHellman()
-			print(diffie.a)
 			storage.set_a(diffie.a)
 			A:int = diffie.run(g=g, p=p)
-			print(A)
+			print(f"A: {A}")
 
 		else:
 			a = storage.get_a()
-			print(a)
 			check(a, "a")
 			diffie = DiffieHellman(a)
 			V:int = diffie.run(g=int(args.key, 16), p=p)
-			key:int = SHA256.hash(V)
+			key:str = SHA256.hash(V)
 			storage.set_key(a, key)
-			print(key)
+			print(f"key: {key}")
 
-	else:
-		msg = args
+	elif MODES.talk.equals(args.mode):
 		key = storage.get_key()
 		check(key, "key")
-		aes = AES(key, msg[:32])
 
-		if args.mode.__eq__(MODES.recv):
-			print(aes.decrypt(msg[33:]))
+		if args.recv is not None:
+			iv = args.recv[:16].encode("utf-8")
+			msg = args.recv[16:].encode("utf-8")
+			aes = AES(key, iv)
+			print(f"decrypted: {aes.decrypt(msg)}")
 
-		elif args.mode.__eq__(MODES.send):
-			print(aes.encrypt(msg[33:]))
+		elif args.send is not None:
+			iv = args.send[:16].encode("utf-8")
+			msg = args.send[16:].encode("utf-8")
+			aes = AES(key, iv)
+			print(f"encrypted: {aes.encrypt(msg)}")
+
+	else:
+		print("Unknown mode!")

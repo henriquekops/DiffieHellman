@@ -18,7 +18,7 @@ __author__ = "Henrique Kops && Victoria Tortelli"
 
 class AES:
 
-	def __init__(self, key, iv) -> None:
+	def __init__(self, key:bytes, iv:str) -> None:
 		self.padding = PKCS7(block_size=256)
 		self.cipher = Cipher(
 			algorithm=algorithms.AES(key),
@@ -26,24 +26,23 @@ class AES:
 			backend=default_backend()
 		)
 	
-	def encrypt(self, msg:str) -> str:
+	def encrypt(self, msg:bytes) -> bytes:
 		encryptor = self.cipher.encryptor()
 		padder = self.padding.padder()
 		p_msg = padder.update(msg) + padder.finalize()
 		return encryptor.update(p_msg) + encryptor.finalize()
 
-	def decrypt(self, msg:str) -> str:
+	def decrypt(self, msg:bytes) -> bytes:
 		decryptor = self.cipher.decryptor()
 		unpadder = self.padding.unpadder()
-		p_msg = decryptor.update(bytes.fromhex(msg)) + decryptor.finalize()
+		p_msg = decryptor.update(msg) + decryptor.finalize()
 		return unpadder.update(p_msg) + unpadder.finalize()
 
 
 class SHA256:
 
 	@classmethod
-	def hash(self, v:int) -> int:
+	def hash(self, v:int) -> str:
 		h = sha256()
-		h.update(str(v)[:32].encode("utf-8"))
-		b = h.digest()
-		return b.hex()
+		h.update(str(v).encode("utf-8"))
+		return h.digest()[:16].hex()
