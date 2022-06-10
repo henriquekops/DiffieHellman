@@ -18,3 +18,4 @@ test: check
 
 clean:
 	if [ -f diffie.db ]; then rm -f diffie.db; fi
+	echo 'OK'
