@@ -52,17 +52,15 @@ if __name__ == "__main__":
 		check(key, "key")
 
 		if args.recv is not None:
-			iv = bytes.fromhex(args.recv)
-			print(iv)
-			print(iv[:16])
-			# msg = bytes.fromhex(args.recv)[16:]
-			# aes = AES(key, iv)
-			# print(f"decrypted: {aes.decrypt(msg)}")
-
-		elif args.send is not None:
-			iv = randbytes(16)
-			msg = args.send.encode("utf-8")
+			b = bytes.fromhex(args.recv)
+			iv, msg = b[:16], b[16:]
 			aes = AES(key, iv)
+			print(f"decrypted: {aes.decrypt(msg).decode()}")
+
+		elif args.send is not None:	
+			iv = randbytes(16)
+			aes = AES(key, iv)
+			msg = args.send.encode("utf-8")
 			print(f"encrypted: {aes.encrypt(msg).hex()}")
 
 	else:
