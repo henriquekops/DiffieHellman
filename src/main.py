@@ -1,9 +1,6 @@
 #!/usr/bin/env python3
 #-*- coding: utf-8 -*-
 
-# built-in dependencies
-from random import randbytes
-
 # project dependencies
 from main.state import Storage
 from main.diffie import DiffieHellman
@@ -15,6 +12,7 @@ from main.utils import (
 	MODES,
 	parse_args,
 	build_parser,
+	gen_iv,
 	load,
 	check
 )
@@ -58,7 +56,7 @@ if __name__ == "__main__":
 			print(f"decrypted: {aes.decrypt(msg).decode()}")
 
 		elif args.send is not None:	
-			iv = randbytes(16)
+			iv = gen_iv()
 			aes = AES(key, iv)
 			msg = ' '.join(args.send).encode("utf-8")
 			print(f"encrypted: {aes.encrypt(msg).hex()}")

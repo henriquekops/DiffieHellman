@@ -2,6 +2,7 @@
 #-*- coding: utf-8 -*-
 
 # built-in dependencies
+from random import randbytes
 from typing import Tuple
 from sys import exit
 from enum import (
@@ -55,6 +56,9 @@ def parse_args(parser):
 		return parser.parse_args()
 	except ArgumentError or ArgumentTypeError:
 		exit(1)
+
+def gen_iv() -> bytes:
+	return randbytes(16)
 
 
 def build_parser() -> ArgumentParser:
