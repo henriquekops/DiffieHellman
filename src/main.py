@@ -60,7 +60,7 @@ if __name__ == "__main__":
 		elif args.send is not None:	
 			iv = randbytes(16)
 			aes = AES(key, iv)
-			msg = args.send.encode("utf-8")
+			msg = ' '.join(args.send).encode("utf-8")
 			print(f"encrypted: {aes.encrypt(msg).hex()}")
 
 	else:

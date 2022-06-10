@@ -70,7 +70,7 @@ def build_parser() -> ArgumentParser:
 
 	parser_talk = subparsers.add_parser("talk", help="talk usage mode")
 	group_talk = parser_talk.add_mutually_exclusive_group(required=True)
-	group_talk.add_argument("--send", metavar="MSG", type=str, help="send message")
+	group_talk.add_argument("--send", metavar="MSG", nargs='+', type=str, help="send message")
 	group_talk.add_argument("--recv", metavar="MSG", type=str, help="receive message")
 
 	return parser
