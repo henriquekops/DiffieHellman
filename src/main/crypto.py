@@ -46,5 +46,5 @@ class SHA256:
 	@classmethod
 	def hash(self, v:int) -> str:
 		h = sha256()
-		h.update(v.to_bytes(128, "big"))
+		h.update(v.to_bytes(129, "big"))
 		return h.digest()[:16].hex()

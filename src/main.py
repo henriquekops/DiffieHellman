@@ -36,7 +36,7 @@ if __name__ == "__main__":
 			diffie = DiffieHellman()
 			storage.set_a(diffie.a)
 			A:int = diffie.run(g=g, p=p)
-			print(f"A: {hex(A)}")
+			print(f"A: {hex(A)[2:]}")
 
 		else:
 			a = storage.get_a()
