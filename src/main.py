@@ -14,7 +14,8 @@ from main.utils import (
 	build_parser,
 	gen_iv,
 	load,
-	check
+	check,
+	invert
 )
 
 
@@ -59,6 +60,13 @@ if __name__ == "__main__":
 			iv = gen_iv()
 			aes = AES(key, iv)
 			msg = ' '.join(args.send).encode("utf-8")
+			print(f"encrypted: {aes.encrypt(msg).hex()}")
+
+		elif args.sendinv is not None:	
+			iv = gen_iv()
+			aes = AES(key, iv)
+			msg = ' '.join(args.sendinv).encode("utf-8")
+			msg = invert(msg)
 			print(f"encrypted: {aes.encrypt(msg).hex()}")
 
 	else:
