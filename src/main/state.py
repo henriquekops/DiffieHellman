@@ -2,10 +2,7 @@
 #-*- coding: utf-8 -*-
 
 # built-in dependencies
-from typing import (
-	List,
-	Tuple
-)
+from typing import List
 
 # external dependencies
 import sqlite3

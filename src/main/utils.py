@@ -15,9 +15,9 @@ from argparse import (
 	ArgumentTypeError
 )
 
-
 # external dependencies
 import yaml
+
 
 __author__ = "Henrique Kops && Victoria Tortelli"
 

@@ -134,6 +134,18 @@ encrypted: 224ac30c8f66c5c7bfc5fa54c30ff4272ee9abb036680c8efe07b4519c21567c
 
 > Notice the usage of `--send <message>` argument
 
+#### Ecnrypt an inverted message (sender)
+
+The following command encrypts a plaintext inverted message:
+
+```
+$  ./run.sh mode talk --sendinv 'hello world!'
+
+encrypted: 70340ecb967b22a711449be99e9e0d57cda64149c42ae3f0427f593baf3ae9e1
+```
+
+> Notice the usage of `--sendinv <message>` argument
+
 #### Decrypt a message (receiver)
 
 The following command decrypts an encrypted message using this project:
