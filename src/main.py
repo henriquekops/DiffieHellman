@@ -57,7 +57,6 @@ if __name__ == "__main__":
 			check(a, "a")
 			diffie = DiffieHellman(a)
 			V:int = diffie.run(g=int(args.key, 16), p=p)
-			print(f"V: {V}")
 			key:str = SHA256.hash(V)
 			storage.set_key(a, key)
 			print(f"key: {key}")
