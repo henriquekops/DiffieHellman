@@ -37,52 +37,52 @@ __author__ = "Henrique Kops && Victoria Tortelli"
 # no início do código como comentário e submetam no Moodle. Valeu
 
 
-if __name__ == "__main__":
-	parser = build_parser()
-	args = parse_args(parser)
+if __name__ == "__main__": 
+	parser = build_parser() #constroi o parser dos argumentos de entrada
+	args = parse_args(parser) #analisa os argumentos de entrada e os coloca em um dicionario 
 
-	storage = Storage()
+	storage = Storage() #monta uma fachada para uma camada de comunicacao para o banco de dados (sqlite) 
 
-	if MODES.exch.equals(args.mode):
-		p, g = load(args.argfile)
+	if MODES.exch.equals(args.mode): #se o usuario quer trocar chaves
+		p, g = load(args.argfile) #carrega o valor do numero primo e seu gerador de um arquivo de entrada (--argfile) 
 		
-		if args.A:
-			diffie = DiffieHellman()
-			storage.set_a(diffie.a)
-			A:int = diffie.run(g=g, p=p)
-			print(f"A: {hex(A)[2:]}")
+		if args.A: #se o usuario quer gerar uma chave publica nova
+			diffie = DiffieHellman() #constroi o objeto do algoritmo de troca de chaves com uma chave privada aleatoria
+			storage.set_a(diffie.a) #armazena a chave privada para utiliza-la depois
+			A:int = diffie.run(g=g, p=p) #executa o diffieHellman a partir do primo e seu gerador para criar a chave publica
+			print(f"A: {hex(A)[2:]}") #mostra o valor da chave publica para o usuario
 
-		else:
-			a = storage.get_a()
-			check(a, "a")
-			diffie = DiffieHellman(a)
-			V:int = diffie.run(g=int(args.key, 16), p=p)
-			key:str = SHA256.hash(V)
-			storage.set_key(a, key)
-			print(f"key: {key}")
+		else: #senao a unica outra opcao para o usuario eh gerar a chave de criptografia a partir da chave publica do remetente
+			a = storage.get_a() #pega a chave privada ja criada
+			check(a, "a") #verifica se a chave realmente existe
+			diffie = DiffieHellman(a) #constroi o objeto do algoritmo de troca de chaves com uma chave privada ja criada
+			V:int = diffie.run(g=int(args.key, 16), p=p) #executa o algoritmo de criacao de chave de criptografia a partir da chave publica recebida
+			key:str = SHA256.hash(V) #realiza o SHA256 para os primeiros 128 bits da chave
+			storage.set_key(a, key) #armazena a chave para usar durante a comunicacao segura
+			print(f"key: {key}") #mostra a chave de criptografia para o usuario
 
-	elif MODES.talk.equals(args.mode):
-		key = storage.get_key()
-		check(key, "key")
+	elif MODES.talk.equals(args.mode): #caso o usuario queira trocar mensagens
+		key = storage.get_key() #busca a chave de criptografia armazenada 
+		check(key, "key") #verifica se a chave existe 
 
-		if args.recv is not None:
-			b = bytes.fromhex(args.recv)
-			iv, msg = b[:16], b[16:]
-			aes = AES(key, iv)
-			print(f"decrypted: {aes.decrypt(msg).decode()}")
+		if args.recv is not None: #se o usuario quer receber uma mensagem
+			b = bytes.fromhex(args.recv) #converte a chave publica do remetente para um array de bytes
+			iv, msg = b[:16], b[16:] #separa o vetor de inicializacao do restante da mensagem
+			aes = AES(key, iv) #constroi o objeto que armazena o algoritmo de cifragem
+			print(f"decrypted: {aes.decrypt(msg).decode()}") #mostra a messagem descriptografada para o usuario
+			
+		elif args.send is not None:	#se o usuario quer mandar uma mensagem
+			iv = gen_iv() #gera um vetor de inicializacao aleatorio
+			aes = AES(key, iv) #constroi o objeto que armazena o algoritmo de cifragem 
+			msg = ' '.join(args.send).encode("utf-8") #gera a mensagem com uma string codificada em utf-8
+			print(f"encrypted: {aes.encrypt(msg).hex()}") #mostra a mensagem criptografada para o usuario
 
-		elif args.send is not None:	
-			iv = gen_iv()
-			aes = AES(key, iv)
-			msg = ' '.join(args.send).encode("utf-8")
-			print(f"encrypted: {aes.encrypt(msg).hex()}")
-
-		elif args.sendinv is not None:	
-			iv = gen_iv()
-			aes = AES(key, iv)
-			msg = ' '.join(args.sendinv).encode("utf-8")
-			msg = invert(msg)
-			print(f"encrypted: {aes.encrypt(msg).hex()}")
+		elif args.sendinv is not None:	#se o usuario quer mandar uma mensagem invertida
+			iv = gen_iv() #gera um vetor de inicializacao aleatorio
+			aes = AES(key, iv) #constroi o objeto que armazena o algoritmo de cifragem 
+			msg = ' '.join(args.sendinv).encode("utf-8") #gera a mensagem com uma string codificada em utf-8
+			msg = invert(msg) #inverte a mensagem 
+			print(f"encrypted: {aes.encrypt(msg).hex()}") #mostra a mensagem invertida criptografada para o usuario
 
 	else:
-		print("Unknown mode!")
+		print("Unknown mode!") #caso nenhum modo escolhido pelo usuario seja valido, mostra essa mensagem
